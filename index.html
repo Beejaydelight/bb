@@ -1,219 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Be My Baby 💖</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background: #fdf2f8;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-  }
-  h1 {
-    margin-top: 20px;
-    color: #d6336c;
-  }
-  p {
-    max-width: 700px;
-    margin: 20px auto;
-    font-size: 1.2rem;
-    line-height: 1.6;
-    color: #444;
-  }
-  .slideshow {
-    position: relative;
-    width: 90%;
-    max-width: 600px;
-    margin: 30px auto;
-    overflow: hidden;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    aspect-ratio: 3/2;
-    touch-action: pan-y;
-  }
-  .slideshow img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-  }
-  .slideshow img.active {
-    opacity: 1;
-  }
-  .buttons {
-    margin: 30px;
-    position: relative;
-  }
-  button {
-    background: #d6336c;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    margin: 10px;
-    border-radius: 25px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: transform 0.2s;
-    position: relative;
-    z-index: 1;
-  }
-  button:hover {
-    transform: scale(1.1);
-    background: #a61e4d;
-  }
-  #music-control {
-    margin: 10px;
-    cursor: pointer;
-    font-size: 1rem;
-    color: #d6336c;
-    border: none;
-    background: none;
-  }
-  .heart {
-    position: absolute;
-    color: #ff4d6d;
-    font-size: 24px;
-    animation: floatUp 2s ease-out forwards;
-    pointer-events: none;
-  }
-  @keyframes floatUp {
-    0% { opacity: 1; transform: translateY(0) scale(1); }
-    100% { opacity: 0; transform: translateY(-200px) scale(1.5); }
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Be My Baby 💖</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #fdf2f8;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    h1 {
+      margin-top: 20px;
+      color: #d6336c;
+    }
+    p {
+      max-width: 700px;
+      margin: 20px auto;
+      font-size: 1.2rem;
+      line-height: 1.6;
+      color: #444;
+    }
+    .slideshow {
+      position: relative;
+      width: 90%;
+      max-width: 600px;
+      margin: 30px auto;
+      overflow: hidden;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .slideshow img {
+      width: 100%;
+      height: auto; /* keep full image */
+      display: none;
+    }
+    .slideshow img.active {
+      display: block;
+    }
+    .buttons {
+      margin: 30px;
+      position: relative;
+      height: 100px;
+    }
+    button {
+      background: #d6336c;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      margin: 10px;
+      border-radius: 25px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      position: relative;
+    }
+    button:hover {
+      background: #a61e4d;
+    }
+    #noBtn {
+      position: absolute;
+      transition: left 0.5s ease, top 0.5s ease; /* smooth movement */
+    }
+    /* Celebration */
+    .celebration {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .emoji {
+      position: absolute;
+      font-size: 2rem;
+      animation: floatUp 4s linear forwards;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(1); opacity: 1; }
+      100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+    }
+  </style>
 </head>
 <body>
-<h1>💖 Will You Be My Girlfriend? 💖</h1>
+  <h1>💖 Will You Be My Girlfriend? 💖</h1>
 
-<p>
-From the first moment we met, I knew there was something truly special about you.  
-Every smile, every laugh, and every moment we share only makes me more certain.  
-Life feels brighter with you in it, and I want to make even more memories together.  
-So I have one question for you…
-</p>
+  <p>
+    From the first moment we met, I knew there was something truly special about you.  
+    Every smile, every laugh, and every moment we share only makes me more certain.  
+    Life feels brighter with you in it, and I want to make even more memories together.  
+    So I have one question for you…
+  </p>
 
-<div class="slideshow" id="slideshow"></div>
+  <div class="slideshow" id="slideshow"></div>
 
-<div class="buttons">
-  <button id="yesBtn" onclick="sayYes()">Yes 💕</button>
-  <button id="noBtn">No 🙈</button>
-</div>
+  <div class="buttons">
+    <button onclick="sayYes()">Yes 💕</button>
+    <button id="noBtn" onmouseover="moveNoBtn()">No 🙈</button>
+  </div>
 
-<button id="music-control" onclick="toggleMusic()">🎵 Play / Pause Music</button>
+  <!-- Celebration -->
+  <div class="celebration" id="celebration"></div>
 
-<audio id="bg-music" loop muted>
-  <source src="the-ronettes-be-my-baby.mp3" type="audio/mpeg">
-  <source src="the-ronettes-be-my-baby.ogg" type="audio/ogg">
-</audio>
+  <!-- Music -->
+  <audio id="bg-music" autoplay loop muted>
+    <source src="the-ronettes-be-my-baby.mp3" type="audio/mpeg">
+  </audio>
 
-<script>
-  // Slideshow
-  const slideshow = document.getElementById("slideshow");
-  let images = [];
-  for (let i = 1; i <= 50; i++) {
-    let img = document.createElement("img");
-    img.src = `photos/${i}.jpg`;
-    img.alt = `Photo ${i}`;
-    img.loading = "lazy";
-    img.onerror = () => img.remove();
-    if (i === 1) img.classList.add("active");
-    slideshow.appendChild(img);
-    images.push(img);
-  }
-
-  let current = 0;
-  let autoSlide = setInterval(nextSlide, 2500);
-
-  function showSlide(index) {
-    images.forEach(img => img.classList.remove("active"));
-    images[index].classList.add("active");
-    current = index;
-  }
-
-  function nextSlide() {
-    showSlide((current + 1) % images.length);
-  }
-
-  function prevSlide() {
-    showSlide((current - 1 + images.length) % images.length);
-  }
-
-  // Swipe detection
-  let startX = 0;
-  slideshow.addEventListener("touchstart", e => {
-    startX = e.touches[0].clientX;
-  });
-
-  slideshow.addEventListener("touchend", e => {
-    let endX = e.changedTouches[0].clientX;
-    let diff = endX - startX;
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) prevSlide();
-      else nextSlide();
-      clearInterval(autoSlide);
-      autoSlide = setInterval(nextSlide, 2500);
+  <script>
+    // Slideshow
+    const slideshow = document.getElementById("slideshow");
+    let images = [];
+    for (let i = 1; i <= 50; i++) {
+      let img = document.createElement("img");
+      img.src = `photos/${i}.jpg`;
+      img.onerror = () => img.remove();
+      if (i === 1) img.classList.add("active");
+      slideshow.appendChild(img);
+      images.push(img);
     }
-  });
 
-  // Music autoplay fix
-  const audio = document.getElementById("bg-music");
-  ["click", "touchstart"].forEach(evt =>
-    document.addEventListener(evt, () => {
-      audio.muted = false;
-      audio.play();
-    }, { once: true })
-  );
-
-  function toggleMusic() {
-    if(audio.paused) audio.play();
-    else audio.pause();
-  }
-
-  // Hearts for Yes button
-  function createHeart(x, y) {
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.style.left = x + "px";
-    heart.style.top = y + "px";
-    heart.textContent = "💖";
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 2000);
-  }
-
-  function sayYes() {
-    alert("Yay!! 💖 I’m the happiest person alive!");
-    let heartsInterval = setInterval(() => {
-      for (let i = 0; i < 10; i++) {
-        createHeart(Math.random()*window.innerWidth, Math.random()*window.innerHeight);
+    let current = 0;
+    setInterval(() => {
+      if (images.length > 0) {
+        images[current].classList.remove("active");
+        current = (current + 1) % images.length;
+        images[current].classList.add("active");
       }
-    }, 200);
-    setTimeout(() => clearInterval(heartsInterval), 10000); // 10 seconds
-  }
+    }, 2500);
 
-  // No button runs away randomly continuously
-  const noBtn = document.getElementById("noBtn");
-  function moveNoButton() {
-    const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-    const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-    noBtn.style.position = "absolute";
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-  }
-  setInterval(moveNoButton, 100); // moves every 0.1 second
+    // Music autoplay fix
+    ["click", "touchstart"].forEach(evt =>
+      document.addEventListener(evt, () => {
+        const audio = document.getElementById("bg-music");
+        audio.muted = false;
+        audio.play();
+      }, { once: true })
+    );
 
-</script>
+    // Celebration
+    function launchCelebration() {
+      const container = document.getElementById("celebration");
+      const emojis = ["❤️", "💖", "💘", "🎈", "🎊", "💞", "💓"];
+      for (let i = 0; i < 120; i++) {
+        const span = document.createElement("span");
+        span.className = "emoji";
+        span.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        span.style.left = Math.random() * 100 + "vw";
+        span.style.fontSize = (Math.random() * 1.5 + 1.2) + "rem";
+        span.style.animationDuration = (Math.random() * 3 + 3) + "s";
+        container.appendChild(span);
+
+        setTimeout(() => span.remove(), 6000);
+      }
+    }
+
+    // Yes button
+    function sayYes() {
+      alert("Yay!! 💖 I’m the happiest person alive!");
+      launchCelebration();
+    }
+
+    // No button runs away smoothly
+    function moveNoBtn() {
+      const btn = document.getElementById("noBtn");
+      const x = Math.random() * (window.innerWidth - btn.offsetWidth - 20);
+      const y = Math.random() * (window.innerHeight - btn.offsetHeight - 20);
+      btn.style.left = `${x}px`;
+      btn.style.top = `${y}px`;
+    }
+  </script>
 </body>
 </html>
-
-
-
-
-
